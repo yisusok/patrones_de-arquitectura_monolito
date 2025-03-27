@@ -1,42 +1,35 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../db/database").getDb();
+const ProductModel = require("../models/ProductModel");
+const productModel = new ProductModel();
 
-// Listar products
-router.get("/", (req, res) => {
-  db.all("SELECT * FROM products", [], (err, rows) => {
-    if (err) {
-      console.error(err.message);
-    }
-    res.render("products", { products: rows });
-  });
+router.get("/", async (req, res) => {
+  try {
+    const products = await productModel.getAll();
+    res.render("products", { products });
+  } catch (error) {
+    return res.status(500).json({ error: "Error al crear producto" });
+  }
 });
 
-// Agregar producto
-router.post("/add", (req, res) => {
+router.post("/add", async (req, res) => {
   const { name, price } = req.body;
-  console.log();
-  db.run(
-    "INSERT INTO products (name, price) VALUES (?, ?)",
-    [name, price],
-    (err) => {
-      if (err) {
-        console.error(err.message);
-      }
-      res.redirect("/products");
-    }
-  );
+  try {
+    await productModel.createProduct({ name, price });
+    res.redirect("/products");
+  } catch (error) {
+    return res.status(500).json({ error: "Error al crear producto" });
+  }
 });
 
-// Eliminar producto
-router.post("/delete/:id", (req, res) => {
+router.post("/delete/:id", async (req, res) => {
   const { id } = req.params;
-  db.run("DELETE FROM products WHERE id = ?", [id], (err) => {
-    if (err) {
-      console.error(err.message);
-    }
+  try {
+    await productModel.deleteProduct(id);
     res.redirect("/products");
-  });
+  } catch (error) {
+    return res.status(500).json({ error: "Error al eliminar producto" });
+  }
 });
 
 module.exports = router;
