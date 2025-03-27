@@ -5,21 +5,22 @@
 <h1>Lista de Productos</h1>
 
 <form action="/products/add" method="POST">
-    <input type="text" name="name" placeholder="Nombre" required>
-    <input type="number" name="price" placeholder="Precio" required>
-    <button type="submit">Agregar</button>
+    <input class="form-control" type="text" name="name" placeholder="Nombre" required>
+    <input class="form-control mt-4" type="number" name="price" placeholder="Precio" required>
+    <button type="submit" class="btn btn-primary mt-4">Agregar</button>
 </form>
 
-<ul>
-    {{#each products}}
-        <li>
-            {{name}} - ${{price}} 
-            <form action="/products/delete/{{id}}" method="POST" style="display:inline;">
-                <button type="submit">Eliminar</button>
+<div class="d-flex flex-column gap-3 ">
+    {{#each products}}        
+            <div class="d-flex gap-3 align-items-center">
+            * {{name}} - ${{price}} 
+            <form action="/products/delete/{{id}}" method="POST" class="d-flex " style="margin: 0px !important;">
+                <button type="submit" class="btn btn-secondary ">Eliminar</button>
             </form>
-        </li>
+            
+        </div>
     {{/each}}
-</ul>
+</div>
 
 <a href="/">Volver</a>
 </div>

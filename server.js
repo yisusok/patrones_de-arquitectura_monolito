@@ -1,13 +1,13 @@
 const express = require("express");
 const { engine } = require("express-handlebars");
 const path = require("path");
-const { crearTablas } = require("./db/initializeDatabase"); // Importar la función de inicialización
+const { createTables } = require("./db/initializeDatabase"); // Importar la función de inicialización
 
 const app = express();
 const PORT = process.env.PORT || 8000;
 
 // Ejecutar la inicialización de la base de datos
-crearTablas();
+createTables();
 
 app.engine("hbs", engine({ extname: ".hbs", defaultLayout: "mainLayout" }));
 app.set("view engine", "hbs");

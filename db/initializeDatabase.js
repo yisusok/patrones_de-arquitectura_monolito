@@ -1,7 +1,7 @@
 const path = require("path");
 const db = require("./database").getDb();
 
-function crearTablas() {
+function createTables() {
   db.serialize(() => {
     db.run(
       `
@@ -22,4 +22,4 @@ function crearTablas() {
   });
 }
 
-module.exports = { crearTablas };
+module.exports = { createTables };
