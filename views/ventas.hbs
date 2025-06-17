@@ -1,0 +1,21 @@
+<h2>Registrar Venta - Sucursal {{sucursalId}}</h2>
+
+<form action="/ventas/sucursal/venta" method="POST">
+  <input type="hidden" name="sucursalId" value="{{sucursalId}}">
+
+  <label for="productoId">Producto:</label>
+  <select name="productoId" id="productoId" required>
+    {{#each productos}}
+      <option value="{{id}}">
+        {{nombre}} (Stock: {{cantidad}}) - ${{precio}}
+      </option>
+    {{/each}}
+  </select>
+
+  <label for="cantidad">Cantidad a vender:</label>
+  <input type="number" name="cantidad" id="cantidad" min="1" required>
+
+  <button type="submit">Registrar Venta</button>
+</form>
+
+<a href="javascript:window.history.back()">Volver</a>

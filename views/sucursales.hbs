@@ -1,5 +1,5 @@
 <div class="container mt-4">
-  <h2>Sucursales de {{nombreUsuario}}</h2>
+  <h2>Sucursales de {{usuarioActual.name}}</h2>
 
   <form action="/sucursales" method="POST" class="mb-4">
     <input type="text" name="nombre" placeholder="Nombre" required class="form-control mb-2" />
@@ -7,13 +7,26 @@
     <button type="submit" class="btn btn-primary">Agregar Sucursal</button>
   </form>
 
-  <ul class="list-group">
-    {{#each sucursales}}
- <li>
-      <strong>{{nombre}}</strong> - {{direccion}}
-      <a href="/products/sucursal/{{id}}">Ver productos</a>
-    </li>    {{/each}}
-  </ul>
+  {{#if sucursales.length}}
+    <ul class="list-group">
+      {{#each sucursales}}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{nombre}}</strong> - {{direccion}}
+          </div>
+          <div>
+            <a href="/ventas/sucursal/{{id}}" class="btn btn-sm btn-success me-2">Ventas</a>
+            <a href="/reportes/sucursal/{{id}}" class="btn btn-sm btn-info">Reportes</a>
+            <a href="/proveedores" class="btn btn-sm btn-outline-info">Ver proveedores</a>
+            <a href="/products/sucursal/{{id}}" class="btn btn-sm btn-outline-secondary ms-2">Productos</a>
+          </div>
+        </li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <p>No tenés sucursales registradas aún.</p>
+  {{/if}}
+
 </div>
 
-
+  <a href="/login">salir</a>

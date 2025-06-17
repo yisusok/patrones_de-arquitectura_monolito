@@ -7,5 +7,14 @@
   <input type="text" name="categoria" placeholder="Categoría">
   <input type="text" name="imagen" placeholder="URL de imagen">
   <textarea name="descripcion" placeholder="Descripción"></textarea>
+
+  <label for="proveedorId">Proveedor</label>
+  <select name="proveedorId" required>
+    <option value="">Seleccioná proveedor</option>
+    {{#each proveedores}}
+      <option value="{{id}}">{{nombre}}</option>
+    {{/each}}
+  </select>
+
   <button type="submit">Crear</button>
 </form>

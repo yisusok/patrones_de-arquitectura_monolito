@@ -1,0 +1,18 @@
+<h2>Reporte de ventas para sucursal {{sucursalId}}</h2>
+
+<table border="1">
+  <tr>
+    <th>Producto</th>
+    <th>Total vendido</th>
+    <th>Ingresos generados</th>
+  </tr>
+  {{#each ventas}}
+    <tr>
+      <td>{{producto}}</td>
+      <td>{{total_vendido}}</td>
+      <td>${{ingresos}}</td>
+    </tr>
+  {{/each}}
+</table>
+
+<a href="/sucursales">← Volver a sucursales</a>

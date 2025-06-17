@@ -3,7 +3,7 @@
 <ul>
   {{#each productos}}
     <li>
-      <strong>{{nombre}} - ${{precio}} - Stock: {{cantidad}} unidades<br>
+      <strong>{{nombre}} - ${{precio}} - Stock: {{cantidad}} unidades - Proveedor: {{proveedorNombre}}<br>
       {{descripcion}}<br>
       <a href="/products/{{id}}/edit">Editar</a> |
       <form action="/products/{{id}}/delete" method="POST" style="display:inline;">
@@ -12,3 +12,6 @@
     </li>
   {{/each}}
 </ul>
+
+<a href="javascript:window.history.back()">Volver</a>
+

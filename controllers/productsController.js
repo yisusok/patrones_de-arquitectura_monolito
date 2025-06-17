@@ -1,5 +1,8 @@
 const ProductoModel = require("../models/ProductModel");
+const ProveedorModel = require("../models/proveedorModel");
+
 const productoModel = new ProductoModel();
+const proveedorModel = new ProveedorModel();
 
 const listBySucursal = async (req, res) => {
   const sucursalId = req.params.id;
@@ -12,17 +15,29 @@ const listBySucursal = async (req, res) => {
   }
 };
 
-const showForm = (req, res) => {
+const showForm = async (req, res) => {
   const sucursalId = req.params.id;
-  res.render("nuevoProducto", { sucursalId });
+  try {
+    const proveedores = await proveedorModel.getAll();
+    res.render("nuevoProducto", { sucursalId, proveedores });
+  } catch (err) {
+    console.error("Error al obtener proveedores:", err);
+    res.status(500).send("Error al obtener proveedores");
+  }
 };
 
 const createProduct = async (req, res) => {
-  const { nombre, precio, cantidad } = req.body;
+  const { nombre, precio, cantidad, proveedorId } = req.body;
   const sucursalId = req.params.id;
 
   try {
-    await productoModel.create({ nombre, precio, cantidad: parseInt(cantidad), sucursalId });
+    await productoModel.create({
+      nombre,
+      precio,
+      cantidad: parseInt(cantidad),
+      sucursalId,
+      proveedorId: proveedorId || null,
+    });
     res.redirect(`/products/sucursal/${sucursalId}`);
   } catch (err) {
     console.error("Error al crear producto:", err);
@@ -35,7 +50,10 @@ const showEditForm = async (req, res) => {
   try {
     const producto = await productoModel.getById(id);
     if (!producto) return res.status(404).send("Producto no encontrado");
-    res.render("editarProducto", { producto });
+
+    const proveedores = await proveedorModel.getAll();
+
+    res.render("editarProducto", { producto, proveedores });
   } catch (err) {
     console.error("Error al obtener producto:", err);
     res.status(500).send("Error al obtener producto");
@@ -44,12 +62,17 @@ const showEditForm = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   const id = req.params.id;
-  const { nombre, precio, cantidad } = req.body;
+  const { nombre, precio, cantidad, proveedorId, sucursalId } = req.body;
 
   try {
-    const changes = await productoModel.update(id, { nombre, precio, cantidad: parseInt(cantidad) });
+    const changes = await productoModel.update(id, {
+      nombre,
+      precio,
+      cantidad: parseInt(cantidad),
+      proveedorId: proveedorId || null,
+    });
     if (changes === 0) return res.status(404).send("Producto no encontrado o no modificado");
-    res.redirect(`/products/sucursal/${req.body.sucursalId}`);
+    res.redirect(`/products/sucursal/${sucursalId}`);
   } catch (err) {
     console.error("Error al actualizar producto:", err);
     res.status(500).send("Error al actualizar producto");
@@ -59,7 +82,7 @@ const updateProduct = async (req, res) => {
 module.exports = {
   listBySucursal,
   showForm,
-  createProduct,   // Asegurate que esté definido y exportado
+  createProduct,
   showEditForm,
   updateProduct,
 };

@@ -7,10 +7,11 @@ class Database {
       path.join(__dirname, "monolito.db"),
       (err) => {
         if (err) {
-          console.error("Error al conectar con SQLite:", err.message);
+          console.error("❌ Error al conectar con SQLite:", err.message);
         } else {
-          console.log("Conectado a SQLite");
+          console.log("✅ Conectado a SQLite");
           this.createTables();
+          this.alterTableProductos();
         }
       }
     );
@@ -21,20 +22,14 @@ class Database {
   }
 
   createTables() {
-    this.db.run(
+    const queries = [
       `CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         email TEXT UNIQUE NOT NULL,
         password TEXT NOT NULL
       )`,
-      (err) => {
-        if (err) console.error("Error al crear tabla users:", err.message);
-        else console.log("Tabla users lista.");
-      }
-    );
 
-    this.db.run(
       `CREATE TABLE IF NOT EXISTS sucursales (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nombre TEXT NOT NULL,
@@ -42,38 +37,59 @@ class Database {
         userId INTEGER NOT NULL,
         FOREIGN KEY (userId) REFERENCES users(id)
       )`,
-      (err) => {
-        if (err) console.error("Error al crear tabla sucursales:", err.message);
-        else console.log("Tabla sucursales lista.");
-      }
-    );
 
-    this.db.run(
+      `CREATE TABLE IF NOT EXISTS proveedores (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre TEXT NOT NULL,
+        contacto TEXT
+      )`,
+
       `CREATE TABLE IF NOT EXISTS productos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nombre TEXT NOT NULL,
         precio REAL NOT NULL,
         cantidad INTEGER NOT NULL DEFAULT 0,
         sucursalId INTEGER NOT NULL,
-        FOREIGN KEY (sucursalId) REFERENCES sucursales(id)
+        proveedorId INTEGER,
+        FOREIGN KEY (sucursalId) REFERENCES sucursales(id),
+        FOREIGN KEY (proveedorId) REFERENCES proveedores(id)
       )`,
-      (err) => {
-        if (err) console.error("Error al crear tabla productos:", err.message);
-        else console.log("Tabla productos lista.");
-      }
-    );
 
-     this.db.run(
-    `ALTER TABLE productos ADD COLUMN cantidad INTEGER NOT NULL DEFAULT 0`,
-    (err) => {
-      // Ignorá el error si la columna ya existe, porque SQLite lanzará error si se intenta agregar dos veces
-      if (err && !err.message.includes("duplicate column name")) {
-        console.error("Error al agregar columna cantidad:", err.message);
+      `CREATE TABLE IF NOT EXISTS ventas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        sucursalId INTEGER NOT NULL,
+        productoId INTEGER NOT NULL,
+        cantidad INTEGER NOT NULL,
+        precio REAL NOT NULL,
+        fecha TEXT NOT NULL,
+        FOREIGN KEY (sucursalId) REFERENCES sucursales(id),
+        FOREIGN KEY (productoId) REFERENCES productos(id)
+      )`
+    ];
+
+    queries.forEach((query) => {
+      this.db.run(query, (err) => {
+        if (err) console.error("❌ Error al crear tabla:", err.message);
+      });
+    });
+
+    console.log("🛠️ Tablas creadas o ya existen.");
+  }
+
+  alterTableProductos() {
+    this.db.all(`PRAGMA table_info(productos)`, (err, columns) => {
+      if (err) return console.error("❌ Error PRAGMA:", err.message);
+
+      const hasProveedorId = columns.some(col => col.name === "proveedorId");
+      if (!hasProveedorId) {
+        this.db.run(`ALTER TABLE productos ADD COLUMN proveedorId INTEGER`, (err) => {
+          if (err) console.error("❌ Error al modificar tabla productos:", err.message);
+          else console.log("🛠️ Columna proveedorId agregada a productos");
+        });
       } else {
-        console.log("Columna cantidad lista o ya existe.");
+        console.log("✅ La columna proveedorId ya existe en productos");
       }
-    }
-  );
+    });
   }
 }
 

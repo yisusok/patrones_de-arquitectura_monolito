@@ -1,4 +1,3 @@
-// controllers/sucursalesController.js
 const Sucursal = require("../models/sucursalModel");
 
 exports.listarSucursales = async (req, res) => {
