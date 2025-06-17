@@ -1,26 +1,122 @@
 {{!< layouts/mainLayout }}
 
-<div class="d-flex justify-content-center align-items-center flex-column" style="height: 100vh;">
-    
-<h1>Lista de Productos</h1>
+<div class="content">
 
-<form action="/products/add" method="POST">
-    <input class="form-control" type="text" name="name" placeholder="Nombre" required>
-    <input class="form-control mt-4" type="number" name="price" placeholder="Precio" required>
-    <button type="submit" class="btn btn-primary mt-4">Agregar</button>
-</form>
+    <div class="d-flex justify-content-center align-items-center flex-column" style="height: 100vh;">
+        
+    <h1>Lista de Productos</h1>
 
-<div class="d-flex flex-column gap-3 ">
-    {{#each products}}        
-            <div class="d-flex gap-3 align-items-center">
-            * {{name}} - ${{price}} 
-            <form action="/products/delete/{{id}}" method="POST" class="d-flex " style="margin: 0px !important;">
-                <button type="submit" class="btn btn-secondary ">Eliminar</button>
-            </form>
-            
+    <form action="/products/add" method="POST">
+        <div class="nombre">
+        <label for="">Nombre</label><input class="form-control" type="text" name="name" placeholder="Nombre" required>
         </div>
-    {{/each}}
+        <div class="precio">
+        <label for="">Precio</label><input class="form-control mt-4" type="number" name="price" placeholder="Precio" required>
+        </div>
+        <button type="submit" class="btn btn-primary mt-4">Agregar</button>
+    </form>
+
+    <div class="productos d-flex flex-column gap-3 ">
+        {{#each products}}        
+            <div class="producto-i d-flex gap-3 align-items-center">
+                {{name}} <br> ${{price}} 
+                <form action="/products/delete/{{id}}" method="POST" class="d-flex " style="margin: 0px !important;">
+                    <button type="submit" class="btn btn-secondary ">Eliminar</button>
+                </form>
+                
+            </div>
+        {{/each}}
+    </div>
+
+    <a href="/">Volver</a>
+    </div>
+
 </div>
 
-<a href="/">Volver</a>
-</div>
+
+<style>
+    body{
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .content{
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .productos{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .producto-i{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        border: 0.2rem solid;
+        border-radius: 1rem;
+        border-color: black;
+        width: 15rem;
+        height: 6rem;
+        justify-content: center;
+    }
+    
+    a{
+        text-decoration: none;
+        background-color: rgb(0, 52, 196);
+        color: white;
+        width: 8rem;
+        height: 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 3rem;
+
+        &:hover{
+            background-color: aqua;
+        }
+    }
+
+    button{
+        text-decoration: none;
+        background-color: rgb(0, 52, 196);
+        color: white;
+        width: 8rem;
+        height: 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 3rem;
+        border: none;
+
+        &:hover{
+            background-color: aqua;
+        }
+        }
+
+        form{
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        input{
+            width: 9rem;
+        height: 1.8rem;
+        }
+
+        .nombre{
+            display: flex;
+            justify-content: space-evenly;
+        }
+        .precio{
+            display: flex;
+            justify-content: space-evenly;
+        }
+</style>

@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const productController = require("../controllers/productsController");
 
-router.get("/", productController.getAll);
+const productosController = require("../controllers/productsController"); // revisá ruta
 
-router.post("/add", productController.create);
+router.get("/sucursal/:id", productosController.listBySucursal);
+router.get("/sucursal/:id/new", productosController.showForm);
+router.post("/sucursal/:id", productosController.createProduct);
+router.get("/:id/edit", productosController.showEditForm);
+router.post("/:id/edit", productosController.updateProduct);
 
-router.post("/delete/:id", productController.delete);
 
 module.exports = router;

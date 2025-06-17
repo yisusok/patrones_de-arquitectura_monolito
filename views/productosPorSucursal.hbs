@@ -1,0 +1,14 @@
+<h2>Productos de la Sucursal {{sucursalId}}</h2>
+<a href="/products/sucursal/{{sucursalId}}/new">Agregar nuevo producto</a>
+<ul>
+  {{#each productos}}
+    <li>
+      <strong>{{nombre}} - ${{precio}} - Stock: {{cantidad}} unidades<br>
+      {{descripcion}}<br>
+      <a href="/products/{{id}}/edit">Editar</a> |
+      <form action="/products/{{id}}/delete" method="POST" style="display:inline;">
+        <button type="submit">Eliminar</button>
+      </form>
+    </li>
+  {{/each}}
+</ul>
